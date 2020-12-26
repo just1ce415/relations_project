@@ -66,4 +66,3 @@ def get_number_transitive_relations(n):
 if __name__ = '__main__':
     import doctest
     print(doctest.testmod())
-
