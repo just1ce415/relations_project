@@ -7,7 +7,6 @@ def read_relation(path):
     '''
     (str) -> list(list)
     Reads a relation (matrix) from the file stated as (path) and returns the list of lists
-    (!!!of strings).
     Supported separator: ',' (csv file).
     If the file has not .csv format, the function will return None.
     '''
@@ -17,7 +16,10 @@ def read_relation(path):
         relation_lst = []
         for line in rel_f:
             # We always have csv file.
-            relation_lst.append(line[:-1].split(','))
+            row = line[:-1].split(',')
+            for i in range(len(row)):
+                row[i] = int(row[i])
+            relation_lst.append(row)
         return relation_lst
 
 
@@ -29,6 +31,9 @@ def write_relation(relation, path='relation_out.csv'):
     '''
     with open(path, 'w', encoding='utf-8') as rel_f:
         for row in relation:
+            for i in range(len(row)):
+                if isinstance(row[i], int):
+                    row[i] = str(row[i])
             rel_f.write(','.join(row) + '\n')
 
 
