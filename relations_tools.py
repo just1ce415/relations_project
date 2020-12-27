@@ -6,19 +6,34 @@ Project repository: https://github.com/just1ce415/relations_project
 def read_relation(path):
     '''
     (str) -> list(list)
-    Reads a relation (matrix) from the file stated as (path) and returns the list of lists.
-    Supported separators: ' ', ',', ' ,'.
+    Reads a relation (matrix) from the file stated as (path) and returns the list of lists                 
+    (!!!of strings).
+    Supported separators: ' ', ',', ' ,'. If there's inappropriate separator, the function
+    will return None.
     '''
-    pass
+    with open(path, 'r', encoding='utf=8') as rel_f:
+        relation_lst = []
+        for line in rel_f:
+            if line.find(' ,') != -1:
+                relation_lst.append(line[:-1].split(' ,'))
+            elif line.find(',') != -1:
+                relation_lst.append(line[:-1].split(','))
+            elif line.find(' ') != -1:
+                relation_lst.append(line[:-1].split(' '))
+            else:
+                return None
+        return relation_lst
 
 
-def write_relation(path='relation.txt', relation):
+def write_relation(relation, path='relation_out.txt'):
     '''
-    (str, list(list)) ->
-    Writes relation (matrix) to the file with (path). The function create relation.txt in
+    (list(list), str) ->
+    Writes relation (matrix) to the file with (path). The function create relation_out.txt in
     the project root directory by default. Separator: ' '.
     '''
-    pass
+    with open(path, 'w', encoding='utf-8') as rel_f:
+        for row in relation:
+            rel_f.write(' '.join(row) + '\n')
 
 
 def get_reflexive_closure(relation):
