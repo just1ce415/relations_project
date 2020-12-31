@@ -1,30 +1,38 @@
 from typing import List
 
-need = [[1,1,1,0,0],\
+need = [[0,1,0,0,0],\
         [1,1,1,0,1],\
         [1,1,1,0,0],\
         [0,0,0,1,1],\
-        [0,1,0,1,1]]
+        [0,0,0,0,0]]
 
-def symetry_and_reflection(lst: List[list]) -> List[list]:
+def symetric_closure(lst: List[list]) -> List[list]:
     """
-    Receives the list of lists with matrix and returns
-    the list with this matrix's reflexive and
-    symetric closures.
-    >>> symetry_and_reflection([[0, 1, 0], [0, 1, 0], \
-[0, 0, 0]])
-    [[1, 1, 0], [1, 1, 0], [0, 0, 1]]
-    >>> symetry_and_reflection([[0, 0, 0], [0, 0, 0], \
+    Receives the list of lists with bool matrix and
+    returns its symetric closure.
+    >>> symetric_closure([[0, 0, 0], [0, 1, 0], \
 [0, 0, 0]])
     [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
     """
+    for index in range(len(lst)):
+        lst[index][index] = 1
+    return lst
+
+def reflective_closure(lst: List[list]) -> List[list]:
+    """
+    Receives the list of lists with matrix and returns
+    the list with this matrix's reflexive closure.
+    >>> reflective_closure([[0, 1, 0, 0, 0], [1, 1, 1, 0, 1], \
+[1, 1, 1, 0, 0], [0, 0, 0, 1, 1], [0, 0, 0, 0, 0]])
+    [[0, 1, 1, 0, 0], [1, 1, 1, 0, 1], [1, 1, 1, 0, 0], \
+[0, 0, 0, 1, 1], [0, 1, 0, 1, 0]]
+    """
     for row in range(len(lst)):
         for column in range(len(lst)):
-            if row == column:
-                lst[row][column] = 1
-            elif lst[row][column] == 1:
+            if lst[row][column] == 1:
                 lst[column][row] = 1
     return lst
+
 
 def class_equivalence(lst: List[list]) -> List[list]:
     """
@@ -58,8 +66,6 @@ def class_equivalence(lst: List[list]) -> List[list]:
 
     result = [list(item) for item in result]
     return result
-
-print(class_equivalence(need))
 
 if __name__=='__main__':
     from doctest import testmod
