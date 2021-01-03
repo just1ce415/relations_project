@@ -195,15 +195,15 @@ def get_number_of_transitive_relations(number_of_elements):
     Counts a number of transitive relations on set {A x A}
     where A has [number_of_elements] elements
 
-    >>> get_number_of_transitive(0)
+    >>> get_number_of_transitive_relations(0)
     1
-    >>> get_number_of_transitive(1)
+    >>> get_number_of_transitive_relations(1)
     2
-    >>> get_number_of_transitive(2)
+    >>> get_number_of_transitive_relations(2)
     13
-    >>> get_number_of_transitive(3)
+    >>> get_number_of_transitive_relations(3)
     171
-    >>> get_number_of_transitive(4)
+    >>> get_number_of_transitive_relations(4)
     3994
     """
     A = [x for x in range(number_of_elements)]
