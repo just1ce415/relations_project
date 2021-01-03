@@ -110,9 +110,8 @@ def is_transitive(matrix: list) -> bool:
     for k in range(len(matrix)):
         for i in range(len(matrix)):
             for j in range(len(matrix)):
-                previous = trans_closure[i][j]
                 trans_closure[i][j] = trans_closure[i][j] | (trans_closure[i][k] & trans_closure[k][j])
-                if previous != trans_closure[i][j]:
+                if matrix[i][j] != trans_closure[i][j]:
                     return False
     return True
 
