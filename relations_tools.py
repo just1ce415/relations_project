@@ -2,7 +2,7 @@
 The module with functions to operate and process with relations based on the martix representation.
 Project repository: https://github.com/just1ce415/relations_project
 """
-
+import copy
 
 def read_relation(path: str) -> list:
     '''
@@ -14,8 +14,17 @@ def read_relation(path: str) -> list:
     with open(path, 'r', encoding='utf=8') as rel_f:
         relation_lst = []
         for line in rel_f:
+            if line.find(', ') != -1:
+                sep = ', '
+            elif line.find(' ') != -1:
+                sep = ' '
+            else:
+                sep = ','
+
+            if line == '':
+                break
             # We always have csv file.
-            row = line[:-1].split(' ')
+            row = line[:-1].split(sep)
             for i in range(len(row)):
                 row[i] = int(row[i])
             relation_lst.append(row)
@@ -29,7 +38,7 @@ def write_relation(relation: list, path: str='relation_out.csv'):
     '''
     with open(path, 'w', encoding='utf-8') as rel_f:
         for row in relation:
-            rel_f.write(str(row)[1:-1])
+            rel_f.write(str(row)[1:-1] + '\n')
 
 
 def get_symmetric_closure(lst: list) -> list:
@@ -86,22 +95,25 @@ def get_transitive_closure(relation: list) -> list:
     return relation
 
 
-def transform_into_relation(matrix):
+def transform_into_matrix(relation):
     '''
-    (list(list)) -> (list(tuple))
-    Transform matrix into relation.
-    >>> transform_into_relation([[1, 0, 1], [1, 1, 0], [0, 0, 1]])
-    [(0, 0), (0, 2), (1, 0), (1, 1), (2, 2)]
-    >>> transform_into_relation([[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 1, 0, 0, 0], \
-[0, 1, 1, 0, 0], [0, 1, 1, 1, 0]])
-    [(2, 1), (3, 1), (3, 2), (4, 1), (4, 2), (4, 3)]
+    (list(tuple)) -> (list(list))
+    Transform relation into matrix.
+    >>> transform_into_matrix([(2, 1), (3, 1), (3, 2), (4, 1), (4, 2), (4, 3)])
+    [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 1, 0, 0, 0], [0, 1, 1, 0, 0], [0, 1, 1, 1, 0]]
+    >>> transform_into_matrix([(0, 0), (0, 2), (1, 0), (1, 1), (2, 2)])
+    [[1, 0, 1], [1, 1, 0], [0, 0, 1]]
     '''
     result = []
-    length = len(matrix)
+    length = max(max(relation)) + 1
     for i in range(length):
+        temporary = []
         for j in range(length):
-            if matrix[i][j] == 1:
-                result.append(tuple([i, j]))
+            if (i, j) in relation:
+                temporary.append(1)
+            else:
+                temporary.append(0)
+        result.append(temporary)
     return result
 
 
@@ -116,16 +128,19 @@ def is_transitive(matrix: list) -> bool:
     '''
     if len(matrix) == 0:
         return True
-    elif isinstance(matrix[0], list):
-        relation = transform_into_relation(matrix)
-    else:
-        relation = matrix
-    second_elements = [b for (a, b) in relation]
-    for (a, b) in relation:
-        for c in second_elements:
-            if (b, c) in relation and (a,c) not in relation:
-                return False
-    return True
+    elif isinstance(matrix[0], tuple):
+        matrix = transform_into_matrix(matrix)
+    trans_closure = copy.deepcopy(matrix)
+    for k in range(len(matrix)):
+        for i in range(len(matrix)):
+            for j in range(len(matrix)):
+                previous = trans_closure[i][j]
+                trans_closure[i][j] = trans_closure[i][j] | (trans_closure[i][k] & trans_closure[k][j])
+                if previous != trans_closure[i][j]:
+                    return False
+    if trans_closure == matrix:
+        return True
+    return False
 
 
 def get_equivalence_class(lst: list) -> list:
@@ -210,25 +225,28 @@ def get_number_transitive_relations(number_of_elements: int) -> int:
 
 if __name__ =='__main__':
     # Read
-    relation = read_relation('rel_50_0.1.csv')
+    relation = read_relation('rel_1500_0.9.csv')
     print('ended')
 
-    # Closures
-    reflexive = get_reflexive_closure(relation)
-    print('refl ended')
-    symmetric = get_symmetric_closure(relation)
-    print('symm ended')
+    ## Closures
+    #reflexive = get_reflexive_closure(relation)
+    #print('refl ended')
+    #symmetric = get_symmetric_closure(relation)
+    #print('symm ended')
     transitive = get_transitive_closure(relation)
     print('trans ended')
 
-    # Equivalance classes
-    eqiuv_classes = get_equivalence_class(relation)
-    print('eq_clss ended')
+    ## Equivalance classes
+    #eqiuv_classes = get_equivalence_class(relation)
+    #print('eq_clss ended')
 
     # Is_transitive
-    trans = is_transitive(relation)
-    print('is_trans')
+    #trans = is_transitive(relation)
+    #print('is_trans')
+
+    #num = get_number_transitive_relations(5)
+    #print('ended')
 
     # Write
-    write_relation(relation)
-    print('ended')
+    #write_relation(relation)
+    #print('ended')
