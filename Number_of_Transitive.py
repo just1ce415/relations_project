@@ -1,5 +1,29 @@
-def is_transitive(relation):
-    return True
+import copy
+
+def is_transitive(matrix: list) -> bool:
+    '''
+    Check if matrix (relation) is transitive.
+    >>> is_transitive([[1, 0, 1], [1, 1, 0], [0, 0, 1]])
+    False
+    >>> is_transitive([[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 1, 0, 0, 0], \
+[0, 1, 1, 0, 0], [0, 1, 1, 1, 0]])
+    True
+    '''
+    if len(matrix) == 0:
+        return True
+    elif isinstance(matrix[0], tuple):
+        matrix = transform_into_matrix(matrix)
+    trans_closure = copy.deepcopy(matrix)
+    for k in range(len(matrix)):
+        for i in range(len(matrix)):
+            for j in range(len(matrix)):
+                previous = trans_closure[i][j]
+                trans_closure[i][j] = trans_closure[i][j] | (trans_closure[i][k] & trans_closure[k][j])
+                if previous != trans_closure[i][j]:
+                    return False
+    if trans_closure == matrix:
+        return True
+    return False
 
 def number_of_transitive(number_of_elements):
     """
@@ -27,7 +51,7 @@ def number_of_transitive(number_of_elements):
     >>> number_of_transitive(3)
     171
     >>> number_of_transitive(4)
-    3,994
+    3994
     """
     A = [x for x in range(number_of_elements)]
     main_relation = [(x, y) for y in A for x in A]
@@ -47,11 +71,10 @@ def number_of_transitive(number_of_elements):
             binary_set[index_of_2 + 1] += 1
 
         # Creates relation on the blank
-        relation = []
+        relation = [[] for i in range(number_of_elements)]
         for index in range(len(binary_set)):
-            if binary_set[index] == 1:
-                relation.append(main_relation[index])
-        
+            relation[index//number_of_elements].append(binary_set[index])
+
         # Prepares the blank for the next relation
         binary_set[0] += 1
 
@@ -60,6 +83,6 @@ def number_of_transitive(number_of_elements):
         if is_transitive(relation):
             amount_of_transitive_relations += 1
 
-    return amount_of_transitive_relations
+    return amount_of_transitive_relations + 1
 
-print(number_of_transitive(5))
+print(number_of_transitive(4))
