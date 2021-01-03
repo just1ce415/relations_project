@@ -95,28 +95,6 @@ def get_transitive_closure(relation: list) -> list:
     return relation
 
 
-def transform_into_matrix(relation):
-    '''
-    (list(tuple)) -> (list(list))
-    Transform relation into matrix.
-    >>> transform_into_matrix([(2, 1), (3, 1), (3, 2), (4, 1), (4, 2), (4, 3)])
-    [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 1, 0, 0, 0], [0, 1, 1, 0, 0], [0, 1, 1, 1, 0]]
-    >>> transform_into_matrix([(0, 0), (0, 2), (1, 0), (1, 1), (2, 2)])
-    [[1, 0, 1], [1, 1, 0], [0, 0, 1]]
-    '''
-    result = []
-    length = max(max(relation)) + 1
-    for i in range(length):
-        temporary = []
-        for j in range(length):
-            if (i, j) in relation:
-                temporary.append(1)
-            else:
-                temporary.append(0)
-        result.append(temporary)
-    return result
-
-
 def is_transitive(matrix: list) -> bool:
     '''
     Check if matrix (relation) is transitive.
@@ -128,8 +106,6 @@ def is_transitive(matrix: list) -> bool:
     '''
     if len(matrix) == 0:
         return True
-    elif isinstance(matrix[0], tuple):
-        matrix = transform_into_matrix(matrix)
     trans_closure = copy.deepcopy(matrix)
     for k in range(len(matrix)):
         for i in range(len(matrix)):
@@ -138,9 +114,7 @@ def is_transitive(matrix: list) -> bool:
                 trans_closure[i][j] = trans_closure[i][j] | (trans_closure[i][k] & trans_closure[k][j])
                 if previous != trans_closure[i][j]:
                     return False
-    if trans_closure == matrix:
-        return True
-    return False
+    return True
 
 
 def get_equivalence_class(lst: list) -> list:
