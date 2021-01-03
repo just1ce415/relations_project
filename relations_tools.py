@@ -163,29 +163,47 @@ def get_equivalence_class(lst: list) -> list:
     return result
 
 
-def get_number_transitive_relations(number_of_elements: int) -> int:
+def is_transitive_1(relation):
+    '''
+    (list(list)) -> bool
+
+    This function is used for function get_number_of_transitive_relations
+
+    Check if relation is transitive.
+
+    >>> is_transitive_1([(1, 2), (2, 3), (1, 3)])
+    True
+    >>> is_transitive_1([(1, 1), (2, 2), (1, 3)])
+    False
+    '''
+    second_elements = [b for (a, b) in relation]
+    for (a, b) in relation:
+        for c in second_elements:
+            if (b, c) in relation and (a,c) not in relation:
+                return False
+    return True
+
+def get_number_of_transitive_relations(number_of_elements):
     """
+    int -> int
+
     WARNING!!!
     DO NOT USE THIS VERSION OF FUNCTION FOR NUMBERS HIGHER THAN 5
     IT MAY LEAD TO CALCULATIONS THAT WILL CONTINUE FOR MORE THAN
     2000 MINUTES
 
-    Also, this version of function is not working right, because it must
-    use function which checks if the relation is transitive.
-    Now it returns just amount of relations that may be built on the set
-    that has amount_of_elements elements
-
     Counts a number of transitive relations on set {A x A}
     where A has [number_of_elements] elements
-    >>> get_number_transitive_relations(0)
+
+    >>> get_number_of_transitive(0)
     1
-    >>> get_number_transitive_relations(1)
+    >>> get_number_of_transitive(1)
     2
-    >>> get_number_transitive_relations(2)
+    >>> get_number_of_transitive(2)
     13
-    >>> get_number_transitive_relations(3)
+    >>> get_number_of_transitive(3)
     171
-    >>> get_number_transitive_relations(4)
+    >>> get_number_of_transitive(4)
     3994
     """
     A = [x for x in range(number_of_elements)]
@@ -216,11 +234,11 @@ def get_number_transitive_relations(number_of_elements: int) -> int:
 
         # Checks if the relation is transitive
         # If yes, then includes it in the amount of transitive relations
-        if is_transitive(relation):
+        if is_transitive_1(relation):
             amount_of_transitive_relations += 1
 
-    # Counting Decart squere
     return amount_of_transitive_relations + 1
+
 
 
 if __name__ =='__main__':
@@ -244,7 +262,7 @@ if __name__ =='__main__':
     #trans = is_transitive(relation)
     #print('is_trans')
 
-    #num = get_number_transitive_relations(5)
+    #num = get_number_of_transitive_relations(5)
     #print('ended')
 
     # Write
