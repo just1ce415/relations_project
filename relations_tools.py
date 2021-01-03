@@ -159,7 +159,8 @@ def get_equivalence_class(lst: list) -> list:
         for column in range(length) if lst[row][column] == 1]
 
     result = []
-    [result.append(list(element)) for element in equivalence_dict.values()]
+    [result.append(list(element)) for element in equivalence_dict.values()
+    if list(element) not in result]
     return result
 
 
