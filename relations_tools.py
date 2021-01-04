@@ -218,6 +218,8 @@ def is_transitive_alternative(relation):
     >>> is_transitive_alternative([(1, 2), (2, 3), (1, 3)])
     True
     >>> is_transitive_alternative([(1, 1), (2, 2), (1, 3)])
+    True
+    >>> is_transitive_alternative([(1, 2), (2, 4)])
     False
     '''
     second_elements = [b for (a, b) in relation]
@@ -316,3 +318,8 @@ if __name__ =='__main__':
     #~~~Write~~~
     #write_relation(relation)
     #print('write ended')
+
+    #import doctest
+    #print(doctest.testmod())
+
+    pass
