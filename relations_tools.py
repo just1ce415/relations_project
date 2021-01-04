@@ -38,7 +38,8 @@ def write_relation(relation: list, path: str='relation_out.csv'):
     '''
     with open(path, 'w', encoding='utf-8') as rel_f:
         for row in relation:
-            rel_f.write(str(row)[1:-1] + '\n')
+            row = [str(el) for el in row]
+            rel_f.write(','.join(row) + '\n')
 
 
 def get_symmetric_closure(lst: list) -> list:
